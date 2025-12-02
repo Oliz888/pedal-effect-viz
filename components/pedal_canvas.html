@@ -1,0 +1,35 @@
+<!doctype html><html><head><meta charset="utf-8">
+<style>
+ body{margin:0;background:#101418}
+ .pedal{width:280px;height:360px;border-radius:24px;margin:auto;position:relative;box-shadow:0 0 0 2px #e6e6e6 inset}
+ canvas{position:absolute;inset:0}
+ .label{position:absolute;bottom:18px;width:100%;text-align:center;color:#fff;font:700 18px system-ui}
+ .led{position:absolute;bottom:52px;left:50%;transform:translateX(-50%);width:14px;height:14px;border-radius:50%;background:#223;box-shadow:0 0 0 2px #000 inset}
+ .led.on{background:#1aff66;box-shadow:0 0 12px #1aff66}
+</style></head><body>
+<div class="pedal" id="pedal" style="background: {{bg}};">
+  <canvas id="cv" width="280" height="360"></canvas>
+  <div class="led {{led}}"></div>
+  <div class="label">{{title}}</div>
+</div>
+<script>
+const cfg={{config}};
+const cv=document.getElementById('cv'); const ctx=cv.getContext('2d');
+function knob(cx,cy,r,val,text){
+  ctx.fillStyle='#f1f1f1'; ctx.strokeStyle='#222'; ctx.lineWidth=3;
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fill(); ctx.stroke();
+  const ang=(-140+280*val)*Math.PI/180;
+  const px=cx+(r-8)*Math.cos(ang), py=cy+(r-8)*Math.sin(ang);
+  ctx.strokeStyle='#ff5252'; ctx.lineWidth=4; ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(px,py); ctx.stroke();
+  ctx.fillStyle='#fff'; ctx.font='bold 13px system-ui'; ctx.textAlign='center'; ctx.fillText(text,cx,cy+r+18);
+}
+function draw(){
+  ctx.clearRect(0,0,cv.width,cv.height);
+  knob(70,120,32,cfg.time,cfg.labels.time);
+  knob(140,120,32,cfg.fb,cfg.labels.fb);
+  knob(210,120,32,cfg.mix,cfg.labels.mix);
+  ctx.fillStyle='#ddd'; ctx.font='12px system-ui'; ctx.textAlign='center';
+  ctx.fillText(cfg.values.time,70,170); ctx.fillText(cfg.values.fb,140,170); ctx.fillText(cfg.values.mix,210,170);
+}
+draw();
+</script></body></html>
